@@ -7,31 +7,25 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.service.UserDetailService;
-import ru.kata.spring.boot_security.demo.service.UserServiceImp;
+import ru.kata.spring.boot_security.demo.service.UsersDetailService;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
-    private final UserDetailService userDetailService;
-
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailService userDetailService) {
+    private final UsersDetailService usersDetailService;
+    @Autowired
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UsersDetailService usersDetailService) {
         this.successUserHandler = successUserHandler;
-        this.userDetailService = userDetailService;
+        this.usersDetailService = usersDetailService;
     }
-
-
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/**").hasRole("ADMIN")
@@ -40,16 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().successHandler(successUserHandler)
                 .permitAll()
                 .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
                 .permitAll();
-
     }
 
-    @Autowired
+    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailService);
+        auth.userDetailsService(usersDetailService);
     }
 
     @Bean
