@@ -29,7 +29,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Transactional
-    public void delete(long id) {
+    public void deleteById(long id) {
         usersRepository.deleteById(id);
     }
 
