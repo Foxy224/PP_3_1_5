@@ -1,6 +1,6 @@
 "use strict";
 
-const url = "http://localhost:8080/api/v1/user"
+const url = "http://localhost:8080/api/v1/admin/users"
 
 async function getAdminPage() {
     let page = await fetch(url);
@@ -189,7 +189,7 @@ const password_edit = document.getElementById('password_edit');
 
 async function editModalData(id) {
     $('#editModal').modal('show');
-    const urlDataEd = 'http://localhost:8080/api/v1/user/' + id;
+    const urlDataEd = 'http://localhost:8080/api/v1/admin/users/' + id;
     let usersPageEd = await fetch(urlDataEd);
     if (usersPageEd.ok) {
         await usersPageEd.json().then(user => {
@@ -205,7 +205,7 @@ async function editModalData(id) {
 }
 
 async function editUser() {
-    let urlEdit = 'http://localhost:8080/api/v1/user/' + id_edit.value;
+    let urlEdit = 'http://localhost:8080/api/v1/admin/users/' + id_edit.value;
     let listOfRole = [];
     for (let i = 0; i < form_edit.role_edit.options.length; i++) {
         if (form_edit.role_edit.options[i].selected) {
@@ -223,7 +223,7 @@ async function editUser() {
         roles: listOfRole
     };
     let method = {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
             "Content-Type": "application/json"
         },
@@ -244,7 +244,7 @@ const password_delete = document.getElementById('delete_password');
 
 async function deleteModalData(id) {
     $('#deleteModal').modal('show');
-    const urlForDel = 'http://localhost:8080/api/v1/user/' + id;
+    const urlForDel = 'http://localhost:8080/api/v1/admin/users/' + id;
     let usersPageDel = await fetch(urlForDel);
     if (usersPageDel.ok) {
         await usersPageDel.json().then(user => {
@@ -260,7 +260,7 @@ async function deleteModalData(id) {
 }
 
 async function deleteUser() {
-    let urlDel = 'http://localhost:8080/api/v1/delete?id=' + id_delete.value;
+    let urlDel = 'http://localhost:8080/api/v1/admin/users?id=' + id_delete.value;
     let modal = $('#deleteModal')
     let user = {
         id: modal.find('#delete_id').val(),
